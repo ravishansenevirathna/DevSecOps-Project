@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Stack from "@mui/material/Stack";
 import Card from "@mui/material/Card";
@@ -23,6 +24,7 @@ import { useGetConfigurationQuery } from "src/store/slices/configuration";
 import { MEDIA_TYPE } from "src/types/Common";
 import { useGetGenresQuery } from "src/store/slices/genre";
 import { MAIN_PATH } from "src/constant";
+import { useLazyGetAppendedVideosQuery } from "src/store/slices/discover";
 
 interface VideoCardModalProps {
   video: Video;
@@ -40,9 +42,17 @@ export default function VideoCardModal({
 
   const { data: configuration } = useGetConfigurationQuery(undefined);
   const { data: genres } = useGetGenresQuery(mediaType);
+  const [getVideoDetail, { data: detail }] = useLazyGetAppendedVideosQuery();
   const setPortal = usePortal();
   const rect = anchorElement.getBoundingClientRect();
   const { setDetailType } = useDetailModal();
+
+  useEffect(() => {
+    if (video) {
+      getVideoDetail({ mediaType, id: video.id });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [video]);
 
   return (
     <Card
@@ -103,7 +113,15 @@ export default function VideoCardModal({
           <Stack direction="row" spacing={1}>
             <NetflixIconButton
               sx={{ p: 0 }}
-              onClick={() => navigate(`/${MAIN_PATH.watch}`)}
+              onClick={() => {
+                navigate(`/${MAIN_PATH.watch}`, {
+                  state: {
+                    videoKey: detail?.videos.results[0]?.key,
+                    title: getVideoTitle(video),
+                    overview: video.overview,
+                  },
+                });
+              }}
             >
               <PlayCircleIcon sx={{ width: 40, height: 40 }} />
             </NetflixIconButton>
