@@ -1,6 +1,6 @@
 # Production-Ready Docker CI/CD Pipeline
 
-[![Production Docker Build & Push](https://github.com/YOUR_USERNAME/YOUR_REPO/actions/workflows/action.yaml/badge.svg)](https://github.com/YOUR_USERNAME/YOUR_REPO/actions/workflows/action.yaml)
+[![Production Docker Build & Push](https://github.com/ravishansenevirathna/DevSecOps-Project/actions/workflows/action.yaml/badge.svg)](https://github.com/ravishansenevirathna/DevSecOps-Project/actions/workflows/action.yaml)
 
 ## Overview
 
@@ -381,7 +381,6 @@ This workflow configuration is provided as-is for educational and production use
 
 ## Maintainers
 
-- Built with [Claude Code](https://claude.com/claude-code)
 - Based on 2025 industry best practices and security research
 
 ---
