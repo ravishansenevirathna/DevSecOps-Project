@@ -3,7 +3,8 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
-import { Movie } from "src/types/Movie";
+import { Video } from "src/types/Movie";
+import { getVideoTitle, getVideoYear } from "src/utils/videoHelpers";
 import NetflixIconButton from "./NetflixIconButton";
 import MaxLineTypography from "./MaxLineTypography";
 import { formatMinuteToReadable, getRandomNumber } from "src/utils/common";
@@ -11,7 +12,7 @@ import AgeLimitChip from "./AgeLimitChip";
 import { useGetConfigurationQuery } from "src/store/slices/configuration";
 
 interface SimilarVideoCardProps {
-  video: Movie;
+  video: Video;
 }
 
 export default function SimilarVideoCard({ video }: SimilarVideoCardProps) {
@@ -61,7 +62,7 @@ export default function SimilarVideoCard({ video }: SimilarVideoCardProps) {
             sx={{ width: "80%", fontWeight: 700 }}
             variant="subtitle1"
           >
-            {video.title}
+            {getVideoTitle(video)}
           </MaxLineTypography>
         </div>
       </div>
@@ -76,7 +77,7 @@ export default function SimilarVideoCard({ video }: SimilarVideoCardProps) {
               <Stack direction="row" spacing={1} alignItems="center">
                 <AgeLimitChip label={`${getRandomNumber(20)}+`} />
                 <Typography variant="body2">
-                  {video.release_date.substring(0, 4)}
+                  {getVideoYear(video)}
                 </Typography>
               </Stack>
             </div>

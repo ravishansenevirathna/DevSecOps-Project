@@ -1,5 +1,6 @@
 import { Outlet, useLocation, useNavigation } from "react-router-dom";
 import Box from "@mui/material/Box";
+import Snowfall from "react-snowfall";
 
 import DetailModal from "src/components/DetailModal";
 import VideoPortalContainer from "src/components/VideoPortalContainer";
@@ -19,8 +20,22 @@ export default function MainLayout() {
         width: "100%",
         minHeight: "100vh",
         bgcolor: "background.default",
+        position: "relative",
       }}
     >
+      {/* Snow effect across all pages */}
+      <Snowfall
+        color="#dee4fd"
+        snowflakeCount={200}
+        style={{
+          position: "fixed",
+          width: "100vw",
+          height: "100vh",
+          zIndex: 9999,
+          pointerEvents: "none",
+        }}
+      />
+
       <MainHeader />
       {navigation.state !== "idle" && <MainLoadingScreen />}
       <DetailModalProvider>

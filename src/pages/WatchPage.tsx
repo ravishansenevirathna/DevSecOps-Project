@@ -1,5 +1,5 @@
 import { useState, useRef, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Player from "video.js/dist/types/player";
 import { Box, Stack, Typography } from "@mui/material";
 import { SliderUnstyledOwnProps } from "@mui/base/SliderUnstyled";
@@ -21,6 +21,12 @@ import PlayerSeekbar from "src/components/watch/PlayerSeekbar";
 import PlayerControlButton from "src/components/watch/PlayerControlButton";
 import MainLoadingScreen from "src/components/MainLoadingScreen";
 
+interface LocationState {
+  videoKey?: string;
+  title?: string;
+  overview?: string;
+}
+
 export function Component() {
   const playerRef = useRef<Player | null>(null);
   const [playerState, setPlayerState] = useState({
@@ -33,7 +39,12 @@ export function Component() {
   });
 
   const navigate = useNavigate();
+  const location = useLocation();
   const [playerInitialized, setPlayerInitialized] = useState(false);
+
+  // Get video data from navigation state
+  const videoData = (location.state as LocationState) || {};
+  const { videoKey, title = "Title", overview = "Description" } = videoData;
 
   const windowSize = useWindowSize();
   const videoJsOptions = useMemo(() => {
@@ -41,21 +52,20 @@ export function Component() {
       preload: "metadata",
       autoplay: true,
       controls: false,
-      // responsive: true,
-      // fluid: true,
+      techOrder: ["youtube"],
       width: windowSize.width,
       height: windowSize.height,
       sources: [
         {
-          // src: videoData?.video,
-          // src: "https://d2zihajmogu5jn.cloudfront.net/bipbop-advanced/bipbop_16x9_variant.m3u8",
-          src: "https://bitmovin-a.akamaihd.net/content/sintel/hls/playlist.m3u8",
-          type: "application/x-mpegurl",
+          type: "video/youtube",
+          src: videoKey
+            ? `https://www.youtube.com/watch?v=${videoKey}`
+            : "https://www.youtube.com/watch?v=L3oOldViIgY", // Fallback
         },
       ],
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [windowSize]);
+  }, [windowSize, videoKey]);
 
   const handlePlayerReady = function (player: Player): void {
     player.on("pause", () => {
@@ -141,7 +151,7 @@ export function Component() {
                   color: "white",
                 }}
               >
-                Title
+                {title}
               </Typography>
             </Box>
             <Box
@@ -236,7 +246,7 @@ export function Component() {
                     textAlign="center"
                     sx={{ maxWidth: 300, mx: "auto", color: "white" }}
                   >
-                    Description
+                    {overview}
                   </MaxLineTypography>
                 </Box>
                 {/* end middle time */}

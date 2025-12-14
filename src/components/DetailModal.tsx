@@ -22,6 +22,7 @@ import NetflixIconButton from "./NetflixIconButton";
 import AgeLimitChip from "./AgeLimitChip";
 import QualityChip from "./QualityChip";
 import { formatMinuteToReadable, getRandomNumber } from "src/utils/common";
+import { getDetailTitle, getDetailYear, getDetailDuration } from "src/utils/videoHelpers";
 import SimilarVideoCard from "./SimilarVideoCard";
 import { useDetailModal } from "src/providers/DetailModalProvider";
 import { useGetSimilarVideosQuery } from "src/store/slices/discover";
@@ -164,10 +165,15 @@ export default function DetailModal() {
                 }}
               >
                 <MaxLineTypography variant="h4" maxLine={1} sx={{ mb: 2 }}>
-                  {detail.mediaDetail?.title}
+                  {detail.mediaDetail && getDetailTitle(detail.mediaDetail)}
                 </MaxLineTypography>
                 <Stack direction="row" spacing={2} sx={{ mb: 3 }}>
-                  <PlayButton sx={{ color: "black", py: 0 }} />
+                  <PlayButton
+                    sx={{ color: "black", py: 0 }}
+                    videoKey={detail.mediaDetail?.videos.results[0]?.key}
+                    title={detail.mediaDetail && getDetailTitle(detail.mediaDetail)}
+                    overview={detail.mediaDetail?.overview}
+                  />
                   <NetflixIconButton>
                     <AddIcon />
                   </NetflixIconButton>
@@ -197,12 +203,12 @@ export default function DetailModal() {
                           sx={{ color: "success.main" }}
                         >{`${getRandomNumber(100)}% Match`}</Typography>
                         <Typography variant="body2">
-                          {detail.mediaDetail?.release_date.substring(0, 4)}
+                          {detail.mediaDetail && getDetailYear(detail.mediaDetail)}
                         </Typography>
                         <AgeLimitChip label={`${getRandomNumber(20)}+`} />
-                        <Typography variant="subtitle2">{`${formatMinuteToReadable(
-                          getRandomNumber(180)
-                        )}`}</Typography>
+                        <Typography variant="subtitle2">
+                          {detail.mediaDetail && getDetailDuration(detail.mediaDetail)}
+                        </Typography>
                         <QualityChip label="HD" />
                       </Stack>
 

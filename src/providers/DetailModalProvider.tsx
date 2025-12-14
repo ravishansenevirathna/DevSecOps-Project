@@ -5,14 +5,14 @@ import { INITIAL_DETAIL_STATE } from "src/constant";
 import createSafeContext from "src/lib/createSafeContext";
 import { useLazyGetAppendedVideosQuery } from "src/store/slices/discover";
 import { MEDIA_TYPE } from "src/types/Common";
-import { MovieDetail } from "src/types/Movie";
+import { VideoDetail } from "src/types/Movie";
 
 interface DetailType {
   id?: number;
   mediaType?: MEDIA_TYPE;
 }
 export interface DetailModalConsumerProps {
-  detail: { mediaDetail?: MovieDetail } & DetailType;
+  detail: { mediaDetail?: VideoDetail } & DetailType;
   setDetailType: (newDetailType: DetailType) => void;
 }
 
@@ -26,7 +26,7 @@ export default function DetailModalProvider({
 }) {
   const location = useLocation();
   const [detail, setDetail] = useState<
-    { mediaDetail?: MovieDetail } & DetailType
+    { mediaDetail?: VideoDetail } & DetailType
   >(INITIAL_DETAIL_STATE);
 
   const [getAppendedVideos] = useLazyGetAppendedVideosQuery();

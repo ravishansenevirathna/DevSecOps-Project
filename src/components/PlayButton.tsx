@@ -3,8 +3,29 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import { useNavigate } from "react-router-dom";
 import { MAIN_PATH } from "src/constant";
 
-export default function PlayButton({ sx, ...others }: ButtonProps) {
+interface PlayButtonProps extends ButtonProps {
+  videoKey?: string;
+  title?: string;
+  overview?: string;
+}
+
+export default function PlayButton({ sx, videoKey, title, overview, onClick, ...others }: PlayButtonProps) {
   const navigate = useNavigate();
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    if (onClick) {
+      onClick(event);
+    } else if (videoKey) {
+      // Navigate with video data in state
+      navigate(`/${MAIN_PATH.watch}`, {
+        state: { videoKey, title, overview }
+      });
+    } else {
+      // Fallback to just navigating without data
+      navigate(`/${MAIN_PATH.watch}`);
+    }
+  };
+
   return (
     <Button
       color="inherit"
@@ -31,7 +52,7 @@ export default function PlayButton({ sx, ...others }: ButtonProps) {
         textTransform: "capitalize",
         ...sx,
       }}
-      onClick={() => navigate(`/${MAIN_PATH.watch}`)}
+      onClick={handleClick}
     >
       Play
     </Button>

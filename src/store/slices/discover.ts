@@ -1,11 +1,11 @@
 import { TMDB_V3_API_KEY } from "src/constant";
 import { tmdbApi } from "./apiSlice";
-import { MEDIA_TYPE, PaginatedMovieResult } from "src/types/Common";
-import { MovieDetail } from "src/types/Movie";
+import { MEDIA_TYPE, PaginatedVideoResult } from "src/types/Common";
+import { VideoDetail } from "src/types/Movie";
 import { createSlice, isAnyOf } from "@reduxjs/toolkit";
 
-const initialState: Record<string, Record<string, PaginatedMovieResult>> = {};
-export const initialItemState: PaginatedMovieResult = {
+const initialState: Record<string, Record<string, PaginatedVideoResult>> = {};
+export const initialItemState: PaginatedVideoResult = {
   page: 0,
   results: [],
   total_pages: 0,
@@ -60,7 +60,7 @@ export default discoverSlice.reducer;
 const extendedApi = tmdbApi.injectEndpoints({
   endpoints: (build) => ({
     getVideosByMediaTypeAndGenreId: build.query<
-      PaginatedMovieResult & {
+      PaginatedVideoResult & {
         mediaType: MEDIA_TYPE;
         itemKey: number | string;
       },
@@ -71,7 +71,7 @@ const extendedApi = tmdbApi.injectEndpoints({
         params: { api_key: TMDB_V3_API_KEY, with_genres: genreId, page },
       }),
       transformResponse: (
-        response: PaginatedMovieResult,
+        response: PaginatedVideoResult,
         _,
         { mediaType, genreId }
       ) => ({
@@ -81,7 +81,7 @@ const extendedApi = tmdbApi.injectEndpoints({
       }),
     }),
     getVideosByMediaTypeAndCustomGenre: build.query<
-      PaginatedMovieResult & {
+      PaginatedVideoResult & {
         mediaType: MEDIA_TYPE;
         itemKey: number | string;
       },
@@ -92,7 +92,7 @@ const extendedApi = tmdbApi.injectEndpoints({
         params: { api_key: TMDB_V3_API_KEY, page },
       }),
       transformResponse: (
-        response: PaginatedMovieResult,
+        response: PaginatedVideoResult,
         _,
         { mediaType, apiString }
       ) => {
@@ -104,7 +104,7 @@ const extendedApi = tmdbApi.injectEndpoints({
       },
     }),
     getAppendedVideos: build.query<
-      MovieDetail,
+      VideoDetail,
       { mediaType: MEDIA_TYPE; id: number }
     >({
       query: ({ mediaType, id }) => ({
@@ -113,7 +113,7 @@ const extendedApi = tmdbApi.injectEndpoints({
       }),
     }),
     getSimilarVideos: build.query<
-      PaginatedMovieResult,
+      PaginatedVideoResult,
       { mediaType: MEDIA_TYPE; id: number }
     >({
       query: ({ mediaType, id }) => ({

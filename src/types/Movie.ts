@@ -1,5 +1,9 @@
 import { Company, Country, Language } from './Common';
 import { Genre } from './Genre';
+import { TVShow as TVShowType, TVShowDetail as TVShowDetailType } from './TVShow';
+
+// Re-export for convenience
+export type { TVShowType as TVShow, TVShowDetailType as TVShowDetail };
 
 export type Appended_Video = {
   id: string;
@@ -59,3 +63,7 @@ export type Movie = {
   video: boolean;
   vote_average: number;
 };
+
+// Union types for components that work with both Movies and TV Shows
+export type Video = Movie | TVShowType;
+export type VideoDetail = MovieDetail | TVShowDetailType;

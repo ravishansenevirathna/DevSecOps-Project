@@ -5,17 +5,19 @@ import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 import VideoItemWithHover from "./VideoItemWithHover";
 import { CustomGenre, Genre } from "src/types/Genre";
-import { PaginatedMovieResult } from "src/types/Common";
+import { PaginatedVideoResult, MEDIA_TYPE } from "src/types/Common";
 import useIntersectionObserver from "src/hooks/useIntersectionObserver";
 
 interface GridWithInfiniteScrollProps {
   genre: Genre | CustomGenre;
-  data: PaginatedMovieResult;
+  data: PaginatedVideoResult;
+  mediaType: MEDIA_TYPE;
   handleNext: (page: number) => void;
 }
 export default function GridWithInfiniteScroll({
   genre,
   data,
+  mediaType,
   handleNext,
 }: GridWithInfiniteScrollProps) {
   const intersectionRef = useRef<HTMLDivElement>(null);
@@ -45,7 +47,7 @@ export default function GridWithInfiniteScroll({
         <Typography
           variant="h5"
           sx={{ color: "text.primary", mb: 2 }}
-        >{`${genre.name} Movies`}</Typography>
+        >{`${genre.name} ${mediaType === MEDIA_TYPE.Tv ? 'Shows' : 'Movies'}`}</Typography>
         <Grid container spacing={2}>
           {data.results
             .filter((v) => !!v.backdrop_path)

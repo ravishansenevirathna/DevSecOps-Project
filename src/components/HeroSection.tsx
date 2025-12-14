@@ -6,6 +6,7 @@ import VolumeOffIcon from "@mui/icons-material/VolumeOff";
 import Player from "video.js/dist/types/player";
 
 import { getRandomNumber } from "src/utils/common";
+import { getVideoTitle } from "src/utils/videoHelpers";
 import MaxLineTypography from "./MaxLineTypography";
 import PlayButton from "./PlayButton";
 import MoreInfoButton from "./MoreInfoButton";
@@ -18,7 +19,7 @@ import {
   useGetVideosByMediaTypeAndCustomGenreQuery,
   useLazyGetAppendedVideosQuery,
 } from "src/store/slices/discover";
-import { Movie } from "src/types/Movie";
+import { Video } from "src/types/Movie";
 import VideoJSPlayer from "./watch/VideoJSPlayer";
 
 interface TopTrailerProps {
@@ -32,7 +33,7 @@ export default function TopTrailer({ mediaType }: TopTrailerProps) {
     page: 1,
   });
   const [getVideoDetail, { data: detail }] = useLazyGetAppendedVideosQuery();
-  const [video, setVideo] = useState<Movie | null>(null);
+  const [video, setVideo] = useState<Video | null>(null);
   const [muted, setMuted] = useState(true);
   const playerRef = useRef<Player | null>(null);
   const isOffset = useOffSetTop(window.innerWidth * 0.5625);
@@ -208,7 +209,7 @@ export default function TopTrailer({ mediaType }: TopTrailerProps) {
                     maxLine={1}
                     color="text.primary"
                   >
-                    {video.title}
+                    {getVideoTitle(video)}
                   </MaxLineTypography>
                   <MaxLineTypography
                     variant="h5"
@@ -218,7 +219,12 @@ export default function TopTrailer({ mediaType }: TopTrailerProps) {
                     {video.overview}
                   </MaxLineTypography>
                   <Stack direction={{ xs: "column", sm: "row" }} spacing={2}>
-                    <PlayButton size="large" />
+                    <PlayButton
+                      size="large"
+                      videoKey={detail?.videos.results[0]?.key}
+                      title={getVideoTitle(video)}
+                      overview={video.overview}
+                    />
                     <MoreInfoButton
                       size="large"
                       onClick={() => {

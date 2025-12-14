@@ -10,16 +10,25 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
+import { useSearchParams, useLocation } from "react-router-dom";
 import useOffSetTop from "src/hooks/useOffSetTop";
-import { APP_BAR_HEIGHT } from "src/constant";
+import { APP_BAR_HEIGHT, MAIN_PATH } from "src/constant";
 import Logo from "../Logo";
 import SearchBox from "../SearchBox";
 import NetflixNavigationLink from "../NetflixNavigationLink";
 
-const pages = ["My List", "Movies", "Tv Shows"];
+const pages = [
+  { label: "Movies", path: `/${MAIN_PATH.browse}?type=movie` },
+  { label: "TV Shows", path: `/${MAIN_PATH.browse}?type=tv` },
+];
 
 const MainHeader = () => {
   const isOffset = useOffSetTop(APP_BAR_HEIGHT);
+  const [searchParams] = useSearchParams();
+  const location = useLocation();
+
+  // Get current media type from URL
+  const currentType = searchParams.get('type') || 'movie';
 
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
     null
@@ -41,6 +50,13 @@ const MainHeader = () => {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const isActive = (path: string) => {
+    if (location.pathname !== `/${MAIN_PATH.browse}`) return false;
+    if (path.includes('type=movie')) return currentType === 'movie';
+    if (path.includes('type=tv')) return currentType === 'tv';
+    return false;
   };
 
   return (
@@ -91,8 +107,10 @@ const MainHeader = () => {
             }}
           >
             {pages.map((page) => (
-              <MenuItem key={page} onClick={handleCloseNavMenu}>
-                <Typography textAlign="center">{page}</Typography>
+              <MenuItem key={page.label} onClick={handleCloseNavMenu}>
+                <NetflixNavigationLink to={page.path}>
+                  <Typography textAlign="center">{page.label}</Typography>
+                </NetflixNavigationLink>
               </MenuItem>
             ))}
           </Menu>
@@ -120,12 +138,16 @@ const MainHeader = () => {
         >
           {pages.map((page) => (
             <NetflixNavigationLink
-              to=""
+              to={page.path}
               variant="subtitle1"
-              key={page}
+              key={page.label}
               onClick={handleCloseNavMenu}
+              sx={{
+                fontWeight: isActive(page.path) ? 700 : 400,
+                opacity: isActive(page.path) ? 1 : 0.7,
+              }}
             >
-              {page}
+              {page.label}
             </NetflixNavigationLink>
           ))}
         </Stack>

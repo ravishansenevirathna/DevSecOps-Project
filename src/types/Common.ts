@@ -1,4 +1,4 @@
-import { Movie } from "src/types/Movie";
+import { Movie, Video } from "src/types/Movie";
 
 export enum MEDIA_TYPE {
   Movie = "movie",
@@ -33,4 +33,8 @@ export type PaginatedResult = {
   total_results: number;
 };
 
+// Generic type that works with both Movies and TV Shows
+export type PaginatedVideoResult = PaginatedResult & { results: Video[] };
+
+// Legacy type for backward compatibility
 export type PaginatedMovieResult = PaginatedResult & { results: Movie[] };

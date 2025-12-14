@@ -8,7 +8,9 @@ import PlayCircleIcon from "@mui/icons-material/PlayCircle";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import AddIcon from "@mui/icons-material/Add";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { Movie } from "src/types/Movie";
+import { Video } from "src/types/Movie";
+import { isMovie } from "src/utils/videoHelpers";
+import { getVideoTitle } from "src/utils/videoHelpers";
 import { usePortal } from "src/providers/PortalProvider";
 import { useDetailModal } from "src/providers/DetailModalProvider";
 import { formatMinuteToReadable, getRandomNumber } from "src/utils/common";
@@ -23,7 +25,7 @@ import { useGetGenresQuery } from "src/store/slices/genre";
 import { MAIN_PATH } from "src/constant";
 
 interface VideoCardModalProps {
-  video: Movie;
+  video: Video;
   anchorElement: HTMLElement;
 }
 
@@ -33,8 +35,11 @@ export default function VideoCardModal({
 }: VideoCardModalProps) {
   const navigate = useNavigate();
 
+  // Detect media type from video object
+  const mediaType = isMovie(video) ? MEDIA_TYPE.Movie : MEDIA_TYPE.Tv;
+
   const { data: configuration } = useGetConfigurationQuery(undefined);
-  const { data: genres } = useGetGenresQuery(MEDIA_TYPE.Movie);
+  const { data: genres } = useGetGenresQuery(mediaType);
   const setPortal = usePortal();
   const rect = anchorElement.getBoundingClientRect();
   const { setDetailType } = useDetailModal();
@@ -85,7 +90,7 @@ export default function VideoCardModal({
             sx={{ width: "80%", fontWeight: 700 }}
             variant="h6"
           >
-            {video.title}
+            {getVideoTitle(video)}
           </MaxLineTypography>
           <div style={{ flexGrow: 1 }} />
           <NetflixIconButton>
@@ -111,7 +116,7 @@ export default function VideoCardModal({
             <div style={{ flexGrow: 1 }} />
             <NetflixIconButton
               onClick={() => {
-                setDetailType({ mediaType: MEDIA_TYPE.Movie, id: video.id });
+                setDetailType({ mediaType, id: video.id });
               }}
             >
               <ExpandMoreIcon />
