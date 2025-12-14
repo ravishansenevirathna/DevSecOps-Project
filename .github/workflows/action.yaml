@@ -12,8 +12,8 @@ on:
 
 env:
   IMAGE_NAME: ${{ secrets.DOCKER_USERNAME }}/netflix-app
-  DOCKERFILE_PATH: ./DevSecOps-Project/Dockerfile
-  CONTEXT_PATH: ./DevSecOps-Project
+  DOCKERFILE_PATH: ./Dockerfile
+  CONTEXT_PATH: .
 
 jobs:
   build-scan-push:
@@ -139,7 +139,7 @@ jobs:
 
       # Step 12: Upload SBOM as artifact
       - name: Upload SBOM artifact
-        uses: actions/upload-artifact@ea165f8d65b6e2b3497f4f446c3b9e8a3026b949 # v4.5.0
+        uses: actions/upload-artifact@b4b15b8c7c6ac21ea08fcf65892d2ee8f75cf882 # v4.4.3
         if: github.event_name != 'pull_request'
         with:
           name: sbom-${{ steps.meta.outputs.version }}
